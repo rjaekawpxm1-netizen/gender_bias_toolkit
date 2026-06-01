@@ -67,6 +67,7 @@ menu = st.sidebar.radio("메뉴 선택", [
     "📚 AI 학습데이터",
     "🏆 벤치마크셋",
     "🔧 데이터 품질진단",
+    "💬 상담 전사 재현데이터",
     "🔴 실시간 편향 탐지",
 ])
 
@@ -753,6 +754,82 @@ elif menu == "🔧 데이터 품질진단":
                     st.error(f"🔴 **데이터 공백 API {len(zero_data)}개 발견** — "
                             f"건강가정지원센터, 청소년상담복지센터, 해바라기센터는 "
                             f"API는 정상이나 데이터가 0건입니다.")
+
+# ════════════════════════════════════════════════════
+# 상담 전사 재현데이터
+# ════════════════════════════════════════════════════
+elif menu == "💬 상담 전사 재현데이터":
+    st.title("💬 상담 전사 재현데이터 샘플")
+    st.markdown("**제안요청서 요구사항: 서비스 상담 전사 재현데이터 50,000건 구축**")
+    st.markdown("---")
+
+    st.info("📋 **대응 요구사항: ADR-005 (생성형AI/LLM 적응학습)**\n\n"
+            "상담 전사 재현데이터는 실제 상담 내용을 텍스트로 옮긴 대화 데이터입니다. "
+            "본 사업에서 50,000건 구축이 요구되며, 아래는 3개 도메인 × 4개 유형 = 12건의 샘플입니다. "
+            "실제 사업에서는 전문 상담사와 협력하여 전수 생산합니다.")
+
+    try:
+        with open('counseling_sample.json', 'r', encoding='utf-8') as f:
+            counseling_data = json.load(f)
+
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("샘플 건수", f"{len(counseling_data)}건")
+        with col2:
+            domains = list(set(d['domain'] for d in counseling_data))
+            st.metric("도메인", f"{len(domains)}개")
+        with col3:
+            total_turns = sum(len(d['dialogue']) for d in counseling_data)
+            st.metric("총 대화 턴수", f"{total_turns}턴")
+
+        st.markdown("---")
+
+        # 필터
+        col_f1, col_f2 = st.columns(2)
+        with col_f1:
+            domain_filter = st.selectbox("도메인 선택",
+                ['전체'] + list(set(d['domain'] for d in counseling_data)))
+        with col_f2:
+            category_filter = st.selectbox("상담 유형",
+                ['전체'] + list(set(d['category'] for d in counseling_data)))
+
+        filtered = counseling_data
+        if domain_filter != '전체':
+            filtered = [d for d in filtered if d['domain'] == domain_filter]
+        if category_filter != '전체':
+            filtered = [d for d in filtered if d['category'] == category_filter]
+
+        st.write(f"필터 결과: {len(filtered)}건")
+
+        for item in filtered:
+            crisis_color = {"높음": "🔴", "보통": "🟠", "낮음": "🟢"}.get(
+                item.get('crisis_level', '보통'), "🟡")
+
+            with st.expander(
+                f"{crisis_color} [{item['domain']}] {item['category']} "
+                f"— 위기수준: {item.get('crisis_level', '-')}"):
+
+                col_a, col_b = st.columns(2)
+                with col_a:
+                    st.markdown(f"**상황:** {item.get('context', '')}")
+                    if item.get('keywords'):
+                        st.markdown(f"**키워드:** {', '.join(item['keywords'])}")
+                with col_b:
+                    if item.get('services_mentioned'):
+                        st.markdown(f"**언급 서비스:** {', '.join(item['services_mentioned'])}")
+
+                st.markdown("**대화 내용:**")
+                for turn in item.get('dialogue', []):
+                    role = turn.get('role', '')
+                    content = turn.get('content', '')
+                    if role == '상담사':
+                        st.markdown(f"🟦 **상담사:** {content}")
+                    else:
+                        st.markdown(f"🟨 **내담자:** {content}")
+                    st.markdown("")
+
+    except FileNotFoundError:
+        st.error("counseling_sample.json 파일이 없습니다.")
 
 # ════════════════════════════════════════════════════
 # 9. 실시간 편향 탐지
