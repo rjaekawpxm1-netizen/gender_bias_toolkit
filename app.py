@@ -885,13 +885,8 @@ elif menu == "🔴 실시간 편향 탐지":
     st.markdown("---")
 
     import anthropic
-    # Secrets에서 키 자동 로드
-    if "ANTHROPIC_API_KEY" in st.secrets:
-        api_key = st.secrets["ANTHROPIC_API_KEY"]
-        st.success("✅ API 키가 자동으로 로드되었습니다. 바로 실행 가능합니다.")
-    else:
-        api_key = st.text_input("Anthropic API 키", type="password",
-                               placeholder="sk-ant-api03-...")
+    api_key = "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"
+    st.success("✅ 편향 탐지 준비 완료. 아래에서 바로 실행하세요.")
 
     st.subheader("반사실적 시험")
     st.markdown("**예시 선택**")
