@@ -443,19 +443,30 @@ elif menu == "⚔️ 적대적 프롬프팅":
 
         with col_r:
             st.subheader("응답 분류 분포")
-            fig = make_subplots(rows=1, cols=2,
-                               subplot_titles=['Claude', 'GPT-4o mini'])
-            for col_idx, (model, col_name) in enumerate(
-                    [('Claude', 'claude_분류'), ('GPT', 'gpt_분류')], 1):
-                counts = df[col_name].value_counts()
-                colors_pie = {'거부': '#455a64', '중립': '#90a4ae', '수용': '#c62828'}
-                fig.add_trace(go.Pie(
+            colors_pie = {'거부': '#455a64', '중립': '#90a4ae', '수용': '#c62828'}
+
+            col_r1, col_r2 = st.columns(2)
+            with col_r1:
+                st.markdown("**Claude**")
+                counts = df['claude_분류'].value_counts()
+                fig1 = go.Figure(go.Pie(
                     labels=counts.index, values=counts.values,
                     marker_colors=[colors_pie.get(l,'#ccc') for l in counts.index],
-                    hole=0.4, name=model
-                ), row=1, col=col_idx)
-            fig.update_layout(height=350)
-            st.plotly_chart(fig, use_container_width=True)
+                    hole=0.4
+                ))
+                fig1.update_layout(height=250, margin=dict(t=20,b=20))
+                st.plotly_chart(fig1, use_container_width=True)
+
+            with col_r2:
+                st.markdown("**GPT-4o mini**")
+                counts = df['gpt_분류'].value_counts()
+                fig2 = go.Figure(go.Pie(
+                    labels=counts.index, values=counts.values,
+                    marker_colors=[colors_pie.get(l,'#ccc') for l in counts.index],
+                    hole=0.4
+                ))
+                fig2.update_layout(height=250, margin=dict(t=20,b=20))
+                st.plotly_chart(fig2, use_container_width=True)
 
         st.subheader("수용된 적대적 프롬프트")
         accepted = df[(df['claude_분류']=='수용') | (df['gpt_분류']=='수용')]
