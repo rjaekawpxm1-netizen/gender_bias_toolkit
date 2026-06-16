@@ -45,7 +45,7 @@ def inject_css():
         word-break: keep-all;
     }}
     .stApp {{ background: {PAGE_BG}; }}
-    .block-container {{ padding-top: 2.2rem; padding-bottom: 3rem; max-width: 1500px; }}
+    .block-container {{ padding-top: 4rem; padding-bottom: 3rem; max-width: 1500px; }}
 
     /* 제목 */
     h1 {{ font-size: 1.7rem !important; font-weight: 800 !important; letter-spacing: -0.02em; color: {INK}; }}
