@@ -601,8 +601,11 @@ elif menu == "⚔️ 적대적 프롬프팅":
                 st.write(f"**프롬프트:** {row.get('prompt','')}")
                 st.write(f"**Claude:** {row.get('claude_분류','')}  ·  **GPT:** {row.get('gpt_분류','')}")
                 if 'claude_응답' in row:
-                    resp = str(row['claude_응답']).replace('#', '').replace('\n', ' ').strip()
-                    st.caption(f"Claude 응답 미리보기: {resp[:120]}…")
+                    rc = str(row['claude_응답']).replace('#','').replace('\n',' ').strip()
+                    st.caption(f"Claude 응답: {rc[:120]}…")
+                if 'gpt_응답' in row:
+                    rg = str(row['gpt_응답']).replace('#','').replace('\n',' ').strip()
+                    st.caption(f"GPT 응답: {rg[:120]}…")
                 st.markdown("---")
 
         glossary([
