@@ -1,0 +1,29 @@
+name: Keep Streamlit Awake
+
+on:
+  schedule:
+    - cron: "0 1,12 * * *"   # 하루 2번 (UTC 01:00, 12:00) — 11시간 간격
+  workflow_dispatch:        # Actions 탭에서 수동 실행 가능
+
+jobs:
+  keep-awake:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install dependencies
+        run: pip install selenium
+
+      - name: Run keep-awake
+        run: python scripts/keep_awake.py
