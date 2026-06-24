@@ -677,8 +677,8 @@ elif menu == "📚 AI 학습데이터":
         if data['instruction']:
             dom, task = {}, {}
             for item in data['instruction']:
-                d = item.get('domain') or item.get('metadata', {}).get('domain', '기타')
-                t = item.get('task_type') or item.get('metadata', {}).get('task_type', 'QA')
+                d = item.get('domain', '기타')
+                t = item.get('category', '기타')
                 dom[d] = dom.get(d, 0) + 1
                 task[t] = task.get(t, 0) + 1
             cL, cR = st.columns(2)
@@ -690,11 +690,11 @@ elif menu == "📚 AI 학습데이터":
             with cR:
                 fig = go.Figure(go.Bar(x=list(task.keys()), y=list(task.values()), marker_color=CAT[1],
                                        text=list(task.values()), textposition='outside'))
-                fig.update_layout(title='태스크별')
+                fig.update_layout(title='주제별')
                 st.plotly_chart(style_fig(fig, 300, legend_top=False), use_container_width=True)
             sample = pd.DataFrame([{
-                '도메인': i.get('domain') or i.get('metadata', {}).get('domain', ''),
-                '태스크': i.get('task_type') or i.get('metadata', {}).get('task_type', ''),
+                '도메인': i.get('domain', ''),
+                '주제': i.get('category', ''),
                 '질문': str(i.get('instruction', ''))[:80], '답변': str(i.get('output', ''))[:80],
             } for i in data['instruction'][:20]])
             st.dataframe(sample, use_container_width=True)
