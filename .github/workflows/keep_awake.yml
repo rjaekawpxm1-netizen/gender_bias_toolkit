@@ -2,7 +2,7 @@ name: Keep Streamlit Awake
 
 on:
   schedule:
-    - cron: "0 1,12 * * *"   # 하루 2번 (UTC 01:00, 12:00) — 11시간 간격
+    - cron: "0 */6 * * *"   # 6시간마다  # 하루 2번 (UTC 01:00, 12:00) — 11시간 간격
   workflow_dispatch:        # Actions 탭에서 수동 실행 가능
 
 jobs:

@@ -4,7 +4,7 @@ import json
 import time
 import re
 
-ANTHROPIC_KEY = "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"
+ANTHROPIC_KEY = "여기에_Claude_API키"
 client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
 
 # ================================
